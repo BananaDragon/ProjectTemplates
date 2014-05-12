@@ -1,12 +1,12 @@
-<extension xmlns="http://ns.adobe.com/air/extension/4.0">
-    <id>com.bananadragon.extension</id>
-    <versionNumber>1.0</versionNumber>
+<extension xmlns="${extension.namespace}">
+    <id>${extension.id}</id>
+    <versionNumber>${extension.version}</versionNumber>
     <platforms>
         <platform name="Android-ARM"> 
             <applicationDeployment> 
-                <nativeLibrary>libExtension.jar</nativeLibrary> 
-                <initializer>com.bananadragon.extension.Extension</initializer> 
-                <finalizer>com.bananadragon.extension.Extension</finalizer> 
+                <nativeLibrary>lib${extension.name}.jar</nativeLibrary> 
+                <initializer>${extension.package}.${extension.className}</initializer> 
+                <finalizer>${extension.package}.${extension.className}</finalizer> 
             </applicationDeployment>
         </platform> 
 

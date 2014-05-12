@@ -1,4 +1,4 @@
-package com.bananadragon.extension
+package ${extension.package}
 {
 	import flash.external.ExtensionContext;
 	
@@ -6,7 +6,7 @@ package com.bananadragon.extension
 	{
 		public static function CreateContext(contextType:String = null):ExtensionContext
 		{	
-			var context:ExtensionContext = ExtensionContext.createExtensionContext("com.bananadragon.extension", contextType);
+			var context:ExtensionContext = ExtensionContext.createExtensionContext("${extension.id}", contextType);
 			if (!context)
 			{
 				if(contextType == null)

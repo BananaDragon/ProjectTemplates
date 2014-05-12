@@ -15,7 +15,7 @@
 
         <javac srcdir="../android/src" destdir="../android/temp/classes" includeantruntime="false" source="1.6" target="1.6">
             <classpath>
-                <pathelement location="${android.sdk}/platforms/android-14/android.jar"/>
+                <pathelement location="${android.sdk}/platforms/${android.platform}/android.jar"/>
                 <pathelement location="../android/libs/FlashRuntimeExtensions.jar"/>
                 <pathelement location="../android/libs/android-support-v4.jar"/>
             </classpath>
@@ -59,7 +59,7 @@
             <arg line='-source-path ../shared/src'/>
             <arg line='-output ../temp/swc/${name}.swc'/>
 			<arg line='-inline'/>
-            <arg line='-swf-version=21'/>
+            <arg line='-swf-version=${swf.version}'/>
             <arg line='-external-library-path+="${flex.sdk}/frameworks/libs/air/airglobal.swc"'/>
             <arg line='-include-classes ${classlist} ${classlist_shared}'/>
         </exec>
@@ -96,7 +96,7 @@
             <arg line='-source-path ../shared/src'/>
             <arg line='-output ../temp/default2/${name}.swc'/>
 			<arg line='-inline'/>
-            <arg line='-swf-version=21'/>
+            <arg line='-swf-version=${swf.version}'/>
             <arg line='-external-library-path+="${flex.sdk}/frameworks/libs/air/airglobal.swc"'/>
             <arg line='-include-classes ${classlist} ${classlist_shared}'/>
         </exec>

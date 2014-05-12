@@ -1,4 +1,4 @@
-package com.bananadragon.extension.internal;
+package ${extension.package}.internal;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -9,18 +9,18 @@ import android.content.Intent;
 import android.os.Build;
 import com.adobe.fre.FREContext;
 import com.adobe.fre.FREFunction;
-import com.bananadragon.extension.internal.functions.*;
+import ${extension.package}.internal.functions.*;
 
-public class ExtensionContext extends FREContext
+public class ${extension.className}Context extends FREContext
 {
-	public ExtensionContext()
+	public ${extension.className}Context()
 	{
-		log("Creating ExtensionContext");
+		log("Creating ${extension.className}Context");
 	}
 	
 	public void log(String message)
 	{
-		Log.i("BananaDragonExtension", message);
+		Log.i("${log.prefix}", message);
 	}
 	
 	public void dispatchEvent(String eventName, String eventData)

@@ -1,0 +1,29 @@
+{
+	"variables": [
+		["extension.id", "com.bananadragon.extension"],
+		["extension.name", "Extension"],
+		["extension.package", "com.bananadragon.extension"],
+		["extension.className", "Extension"],
+		["extension.version", "1.0"],
+		["flex.sdk", "C:\\air13sdk"],
+		["android.sdk", "C:\\Program Files (x86)\\Android\\android-sdk"],
+		["log.prefix", "BananaDragonExtension"],
+		["extension.namespace", "http://ns.adobe.com/air/extension/4.0"],
+		["android.platform", "android-14"],
+		["swf.version", "21"]
+	],
+	"code_directories": [
+		"android\\src",
+		"actionscript\\src",
+		"default\\src",
+		"shared\\src"
+	],
+	"additional_directories": [
+		"build",
+		"android\\res"
+	],
+	"copy": [
+		"android\\libs\\android-support-v4.jar",
+		"android\\libs\\FlashRuntimeExtensions.jar"
+	]
+}

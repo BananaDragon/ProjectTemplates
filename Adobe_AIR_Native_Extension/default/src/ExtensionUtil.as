@@ -1,4 +1,4 @@
-package com.bananadragon.extension
+package ${extension.package}
 {
 	import flash.events.EventDispatcher;
 	import flash.external.ExtensionContext;

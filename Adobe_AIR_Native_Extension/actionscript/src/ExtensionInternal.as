@@ -1,10 +1,13 @@
-package com.bananadragon.extension
+package ${extension.package}
 {
 	import flash.events.EventDispatcher;
+	import flash.events.StatusEvent;
+	import flash.external.ExtensionContext;
 	
 	public class ExtensionInternal extends EventDispatcher
 	{
 		public static var _isSetup:Boolean;
+		private static var context : ExtensionContext;
 		private static var eventProxy : ExtensionInternal;
 		
 		//Redirect public event listeners to the internal event proxy
@@ -29,9 +32,12 @@ package com.bananadragon.extension
 			if (_isSetup)
 				return;
 				
-			if (!eventProxy)
+			if (!context)
 			{
+				context = ExtensionUtil.CreateContext();
+				
 				eventProxy = new ExtensionInternal();
+				context.addEventListener(StatusEvent.STATUS, OnStatus);
 			}else {
 				throw("Extension context already exists.");
 			}
@@ -42,11 +48,17 @@ package com.bananadragon.extension
 		public static function setup():void
 		{
 			_SetupInternal();
+			
+			context.call("setup");
 		}
 		
 		public static function isSupported():Boolean
 		{
-			return false;
+			return true;
+		}
+		
+		public static function OnStatus(e:StatusEvent):void
+		{
 		}
 	}
 }

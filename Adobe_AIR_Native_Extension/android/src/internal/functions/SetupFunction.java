@@ -1,13 +1,10 @@
-package com.bananadragon.extension.internal.functions;
+package ${extension.package}.internal.functions;
 
 import android.content.Intent;
 
 import com.adobe.fre.FREContext;
 import com.adobe.fre.FREFunction;
-import com.adobe.fre.FREInvalidObjectException;
 import com.adobe.fre.FREObject;
-import com.adobe.fre.FRETypeMismatchException;
-import com.adobe.fre.FREWrongThreadException;
 
 public class SetupFunction implements FREFunction 
 {
