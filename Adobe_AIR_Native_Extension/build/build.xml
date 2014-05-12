@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="Air Native Extension Build Scripts" default="all">
+
+    <!-- Config -->
+    <property file="build.config"/>
+	<delete dir="../temp"/>
+	
+    <!-- All -->
+    <target name="all" depends="android,swc,swc_default,package,copy,extract" description="Full build of extension"/>
+
+    <!-- Android -->
+    <target name="android" description="Build Android Library">
+        <delete dir="../android/temp"/>
+        <mkdir dir="../android/temp/classes"/>
+
+        <javac srcdir="../android/src" destdir="../android/temp/classes" includeantruntime="false" source="1.6" target="1.6">
+            <classpath>
+                <pathelement location="${android.sdk}/platforms/android-14/android.jar"/>
+                <pathelement location="../android/libs/FlashRuntimeExtensions.jar"/>
+                <pathelement location="../android/libs/android-support-v4.jar"/>
+            </classpath>
+        </javac>
+        
+        <mkdir dir="../android/temp/zip"/>
+		<copy file="../android/libs/android-support-v4.jar" tofile="../temp/android/android-support-v4.jar" />
+		
+        <copy todir="../temp/android/extension-res/">
+            <fileset dir="../android/res"/>
+        </copy>
+        
+        <mkdir dir="../temp/android/"/>
+        <jar basedir="../android/temp/classes" destfile="../temp/android/lib${name}.jar"/>
+        <delete dir="../android/temp"/>
+    </target>
+
+    <!-- Actionscript -->
+    <target name="swc" description="Build SWC library">
+        <mkdir dir="../temp/swc/content/"/>
+
+        <fileset dir="../actionscript/src" casesensitive="yes" id="classfiles">
+            <include name="**/*.as"/>
+        </fileset>
+
+        <pathconvert property="classlist" refid="classfiles" pathsep=" " dirsep=".">
+            <regexpmapper from=".*src.(.*)\.as" to="\1"/>
+        </pathconvert>
+		
+		<!-- shared -->
+        <fileset dir="../shared/src" casesensitive="yes" id="classfiles_shared">
+            <include name="**/*.as"/>
+        </fileset>
+
+        <pathconvert property="classlist_shared" refid="classfiles_shared" pathsep=" " dirsep=".">
+            <regexpmapper from=".*src.(.*)\.as" to="\1"/>
+        </pathconvert>
+
+        <exec executable="${flex.sdk}/bin/acompc${bin.ext}" failonerror="true">
+            <arg line='-source-path ../actionscript/src'/>
+            <arg line='-source-path ../shared/src'/>
+            <arg line='-output ../temp/swc/${name}.swc'/>
+			<arg line='-inline'/>
+            <arg line='-swf-version=21'/>
+            <arg line='-external-library-path+="${flex.sdk}/frameworks/libs/air/airglobal.swc"'/>
+            <arg line='-include-classes ${classlist} ${classlist_shared}'/>
+        </exec>
+
+        <unzip src="../temp/swc/${name}.swc" dest="../temp/swc/content" overwrite="true"/>
+        <copy file="../temp/swc/content/library.swf" todir="../temp/android" overwrite="true"/>
+        <copy file="../temp/swc/content/library.swf" todir="../temp/default" overwrite="true"/>
+        <delete dir="../temp/swc/content/"/>
+    </target>
+
+    <!-- Default -->
+    <target name="swc_default" description="Build Default library">
+        <mkdir dir="../temp/default/content/"/>
+
+        <fileset dir="../default/src" casesensitive="yes" id="classfiles">
+            <include name="**/*.as"/>
+        </fileset>
+
+        <pathconvert property="classlist" refid="classfiles" pathsep=" " dirsep=".">
+            <regexpmapper from=".*src.(.*)\.as" to="\1"/>
+        </pathconvert>
+		
+		<!-- shared -->
+        <fileset dir="../shared/src" casesensitive="yes" id="classfiles_shared">
+            <include name="**/*.as"/>
+        </fileset>
+
+        <pathconvert property="classlist_shared" refid="classfiles_shared" pathsep=" " dirsep=".">
+            <regexpmapper from=".*src.(.*)\.as" to="\1"/>
+        </pathconvert>
+
+        <exec executable="${flex.sdk}/bin/acompc${bin.ext}" failonerror="true">
+            <arg line='-source-path ../default/src'/>
+            <arg line='-source-path ../shared/src'/>
+            <arg line='-output ../temp/default2/${name}.swc'/>
+			<arg line='-inline'/>
+            <arg line='-swf-version=21'/>
+            <arg line='-external-library-path+="${flex.sdk}/frameworks/libs/air/airglobal.swc"'/>
+            <arg line='-include-classes ${classlist} ${classlist_shared}'/>
+        </exec>
+
+        <unzip src="../temp/default2/${name}.swc" dest="../temp/default2/content" overwrite="true"/>
+        <copy file="../temp/default2/content/library.swf" todir="../temp/default" overwrite="true"/>
+        <delete dir="../temp/default2/content/"/>
+    </target>
+
+    <!-- Package -->
+    <target name="package" description="Create the extension package">
+        <exec executable="${flex.sdk}/bin/adt${bin.ext}" failonerror="true" dir="../temp">
+            <arg value="-package"/>
+            <arg value="-target"/>
+            <arg value="ane"/>
+            <arg value="${name}.ane"/>
+            <arg value="../build/extension.xml"/>
+            <arg line="-swc swc/${name}.swc"/>
+            <arg line="-platform Android-ARM -platformoptions ../build/android-platform.xml -C android/ ."/>
+            <arg line="-platform default -C default/ ."/>
+        </exec>
+
+        <move file="../temp/${name}.ane" todir="../bin"/>
+        <delete dir="../temp"/>
+    </target>
+    
+	<target name="checkCopyDir">
+		<condition property="copyDir.defined">
+			<isset property="copyDir" />
+		</condition>
+	</target>
+	
+	<target name="checkCopyDirWindows">
+		<condition property="copyDirWindows.defined">
+			<isset property="copyDir.windows" />
+		</condition>
+	</target>
+	
+	<target name="copy" depends="checkCopyDir" description="Copy the ane to the current directory" if="copyDir.defined">
+        <copy file="../bin/${name}.ane" todir="${copyDir}" overwrite="true"/>
+	</target>
+	
+	<target name="extract" depends="checkCopyDirWindows" description="Extracts ANE for Windows Debugging" if="copyDirWindows.defined">
+		<delete dir="${copyDir.windows}/${extension.id}.ane" />
+		<unzip src="../bin/${name}.ane" dest="${copyDir.windows}/${extension.id}.ane" overwrite="true"/>
+	</target>
+</project>
